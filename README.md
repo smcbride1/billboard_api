@@ -38,7 +38,7 @@ When the cache parameter is set to true, a cached response is returned.
 By default, requests are not sent for 24 hours after the last request.
 The frequency of caching can be adjusted through the setter `cache_frequency`.
 ```ruby
-# 24 hours (defualt)
+# 24 hours (default)
 BillboardAPI.cache_frequency
 # => 86400
 
