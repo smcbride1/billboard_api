@@ -6,10 +6,18 @@ HOT_100_URL = "https://www.billboard.com/charts/hot-100"
 BILLBOARD_200_URL = "https://www.billboard.com/charts/billboard-200"
 
 class BillboardAPI
-    def self.artist_100
+    @@cache_frequency = 86400
+
+    @@artist_100_cache = {}
+    @@artist_100_cache_time = 0
+    def self.artist_100(cache=false)
+        if cache && !(Time.now.to_i > @@artist_100_cache_time + @@cache_frequency)
+            return @@artist_100_cache
+        end
+        @@artist_100_cache_time = Time.now.to_i
         document = Nokogiri::HTML.parse(open(ARTIST_100_URL))
         artists = document.css(".chart-list-item")
-        artists.map do |artist|
+        @@artist_100_cache = artists.map do |artist|
             new_artist = create_artist_object(
                 artist.attribute("data-title").value, 
                 if artist.css(".chart-list-item__image-wrapper").css("img").length > 1
@@ -26,7 +34,12 @@ class BillboardAPI
         end
     end
 
-    def self.hot_100
+    @@hot_100_cache = {}
+    @@hot_100_cache_time = 0
+    def self.hot_100(cache=false)
+        if cache && !(Time.now.to_i > @@hot_100_cache_time + @@cache_frequency)
+            return @@hot_100_cache
+        end
         document = Nokogiri::HTML.parse(open(HOT_100_URL))
         songs = document.css(".chart-list__element")
         songs.map do |song|
@@ -42,7 +55,12 @@ class BillboardAPI
         end
     end
 
-    def self.billboard_200
+    @@billboard_200_cache = {}
+    @@billboard_200_cache_time = 0
+    def self.billboard_200(cache=false)
+        if cache && !(Time.now.to_i > @@billboard_200_cache_time + @@cache_frequency)
+            return @@billboard_200_cache
+        end
         document = Nokogiri::HTML.parse(open(BILLBOARD_200_URL))
         songs = document.css(".chart-list__element")
         songs.map do |song|
@@ -71,5 +89,13 @@ class BillboardAPI
             artist: artist,
             img_url: img_url
         }
+    end
+
+    def self.cache_frequency
+        @@cache_frequency
+    end
+
+    def self.cache_frequency=(cache_frequency)
+        @@cache_frequency = cache_frequency
     end
 end
