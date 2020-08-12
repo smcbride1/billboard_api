@@ -40,9 +40,10 @@ class BillboardAPI
         if cache && !(Time.now.to_i > @@hot_100_cache_time + @@cache_frequency)
             return @@hot_100_cache
         end
+        @@hot_100_cache_time = Time.now.to_i
         document = Nokogiri::HTML.parse(open(HOT_100_URL))
         songs = document.css(".chart-list__element")
-        songs.map do |song|
+        @@hot_100_cache = songs.map do |song|
             new_song = create_song_object(
                 song.css(".chart-element__information__song").text, 
                 song.css(".chart-element__information__artist").text, 
@@ -61,9 +62,10 @@ class BillboardAPI
         if cache && !(Time.now.to_i > @@billboard_200_cache_time + @@cache_frequency)
             return @@billboard_200_cache
         end
+        @@billboard_200_cache_time = Time.now.to_i
         document = Nokogiri::HTML.parse(open(BILLBOARD_200_URL))
         songs = document.css(".chart-list__element")
-        songs.map do |song|
+        @@billboard_200_cache = songs.map do |song|
             new_song = create_song_object(
                 song.css(".chart-element__information__song").text, 
                 song.css(".chart-element__information__artist").text, 
