@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
     s.name        = 'billboard_api'
-    s.version     = '0.2.0'
+    s.version     = '0.2.1'
     s.date        = '2020-08-09'
     s.summary     = ""
     s.description = "Gem to access Billboard data"
